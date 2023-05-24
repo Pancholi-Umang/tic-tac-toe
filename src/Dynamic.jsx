@@ -1,33 +1,44 @@
-import React, { useState } from 'react'
-import Looping from './Looping';
+import React, { useEffect, useState } from 'react'
 
 const Dynamic = () => {
-    const [state, setstate] = useState(3);
-    const [xs,setXs] = useState([])
+
+    const refresh = () => {
+        window.location.reload();
+    }
+
+    const [data, setData] = useState([])
+    const [state, setstate] = useState(0)
+
     let x = [];
     let gameOver = false;
     let player = "X";
 
-    // setXs(devide)
-    for (let j = 0; j < state; j++) {
-        let devide = [];
-        for (let k = 0; k < state; k++) {
-            devide.push("-")
-        }
-        x.push(devide)
-    }
+    const handleChange = (e) => {
+        setstate(e.target.value);
+        x = [];
 
-    console.log(xs)
+        const vl = e.target.value;
+        for (let j = 0; j < vl; j++) {
+            let devide = [];
+            for (let k = 0; k < vl; k++) {
+                devide.push("-")
+            }
+            x.push(devide)
+            setData(x)
+        }
+    }
 
     const callMe = (X, I) => {
-        do {
-            x[X][I] = player;
-            checkWinner(X, I, x)
+        console.log(data)
+        while (!gameOver) {
+            data[X][I] = player;
+            checkWinner(X, I, data)
             player = (player == "X") ? "O" : "X";
             break;
-        } while (!gameOver)
+        }
     }
-    const checkWinner = (X, I, x) => {
+
+    const checkWinner = (X, I) => {
         const ForX = (currentValue) => currentValue == "X";
         const ForO = (currentValue) => currentValue == "O";
         let check = [];
@@ -37,15 +48,15 @@ const Dynamic = () => {
         // ahiya optional variable atle levo pade chhe because left diagonal ma second value set karavvani chhe
         for (let m = 0; m < state; m++) {
             let dec = state - (optVariable)
-            check.push(x[m][I]);
-            RightDiagonal.push(x[m][m]);
-            LeftDiagonal.push(x[m][dec])
+            check.push(data[m][I]);
+            RightDiagonal.push(data[m][m]);
+            LeftDiagonal.push(data[m][dec])
             ++optVariable;
         }
 
-        if (x[X].every(ForX) == true) {
+        if (data[X].every(ForX) == true) {
             alert("Winner is X")
-        } else if (x[X].every(ForO) == true) {
+        } else if (data[X].every(ForO) == true) {
             alert("winner is O")
         } else if (check.every(ForX) == true) {
             alert("Winner is X")
@@ -73,10 +84,19 @@ const Dynamic = () => {
     return (
         <>
             <div className='centers' >
-                <input type="number" value={state} id="fruits" onChange={e => setstate(e.target.value)} />
-                <button className="button-29" role="button">submit  </button>
+                <input type="number" value={state} id="fruits" onChange={handleChange} />
+                <button className="button-29" onClick={refresh} role="button"> reset </button>
             </div>
-           <Looping t={t} x={x} callMe={callMe} />
+            <div style={{ display: "grid", gridTemplateColumns: `${t}`, marginTop: "10px", width: "300px", height: "300px" }}>
+                {
+                    data?.map((val, X) => {
+                        console.log(data)
+                        return val?.map((ins, I) => {
+                            return <button key={I} onClick={() => callMe(X, I)}>{ins}</button>
+                        })
+                    })
+                }
+            </div>
         </>
     )
 }
