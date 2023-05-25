@@ -8,45 +8,40 @@ const Home = () => {
   const [state, setState] = useState(initialState);
   const [changeToggler, setChangeToggler] = useState(true);
 
-  // aa banne state te button and teni value set karavva mate chhe
   const [StoreValues, setStoreValues] = useState([])
   const [startToggle, setStartToggle] = useState(false)
 
-  // aa banne state nichena dynamic button matena chhe
   const [finalState, setFinalState] = useState(0);
   const [check, setcheck] = useState(false)
   let value = "";
-
+  let copyState;
+  
   const handleClick = (index) => {
-    // console.log(StoreValues)
-    let copyState = [...state];
-    console.log(copyState)
-    if (check == true) {
-      copyState[index] = changeToggler ? "X" : "O";
-      setStoreValues(StoreValues?.slice(0, finalState));
-      setState(copyState);
-      setcheck(false)
-    }else if (copyState[index] === "") {
+    copyState = [...state];
+    setState(copyState);
+  
+    if (copyState[index] === "") {
       copyState[index] = changeToggler ? "X" : "O";
       setChangeToggler(!changeToggler);
-      setState(copyState);
-      // check === true ? setStoreValues([copyState]) : setcheck(false);
       startToggle === true ? setStoreValues([copyState]) : setStoreValues([...StoreValues, copyState]);
       setStartToggle(false);
-    } else{
+      if (check === true) {
+        setStoreValues([...StoreValues?.slice(0, finalState), copyState])
+      }
+    } else {
       alert("already selected");
       setStartToggle(false)
     }
-
+    setcheck(false)
   };
-
-
+  
+  
   const MultipleButtons = (val, i) => {
     setcheck(true)
     setState(val)
     setFinalState(i + 1)
   }
-
+  
   const OnStartGame = () => {
     setState(initialState)
     setStartToggle(true)
@@ -90,7 +85,7 @@ const Home = () => {
           )}
         </div>
         {
-          StoreValues?.map((val, i) => <button key={i} onClick={() => MultipleButtons(val, i)} className="button-7" role="button">{i + 1}</button>)
+          StoreValues?.map((vals, i) => <button key={i} onClick={() => MultipleButtons(vals, i)} className="button-7" role="button">{i + 1}</button>)
         }
         <button id="restart" onClick={OnStartGame}>start</button>
       </div>
