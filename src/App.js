@@ -6,8 +6,8 @@ function App() {
   
   return (
     <div className="App">
-      {/* <Dynamic /> */}
-      <Home />
+      <Dynamic />
+      {/* <Home /> */}
     </div>
   );
 }

@@ -6,36 +6,40 @@ const Dynamic = () => {
         window.location.reload();
     }
 
-    const [data, setData] = useState([])
-    const [state, setstate] = useState(0)
+    const [data, setData] = useState([]);
+    const [state, setstate] = useState();
+    const [player, setPlayer] = useState("X");
 
     let x = [];
     let gameOver = false;
-    let player = "X";
 
     const handleChange = (e) => {
         setstate(e.target.value);
-        x = [];
+    }
 
-        const vl = e.target.value;
-        for (let j = 0; j < vl; j++) {
+    useEffect(() => {
+        setstate(3)
+    }, [])
+
+    useEffect(() => {
+        for (let j = 0; j < state; j++) {
             let devide = [];
-            for (let k = 0; k < vl; k++) {
+            for (let k = 0; k < state; k++) {
                 devide.push("-")
             }
             x.push(devide)
             setData(x)
         }
-    }
+    }, [state])
 
     const callMe = (X, I) => {
         console.log(data)
-        while (!gameOver) {
+        do{
             data[X][I] = player;
             checkWinner(X, I, data)
-            player = (player == "X") ? "O" : "X";
+            setPlayer(player == "X" ? "O" : "X");
             break;
-        }
+        }while(!gameOver)
     }
 
     const checkWinner = (X, I) => {
