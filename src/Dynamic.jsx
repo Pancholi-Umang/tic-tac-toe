@@ -9,13 +9,8 @@ const Dynamic = () => {
     const [data, setData] = useState([]);
     const [state, setstate] = useState();
     const [player, setPlayer] = useState("X");
-
+    const [storeValues, setStoreValues] = useState([])
     let x = [];
-    let gameOver = false;
-
-    const handleChange = (e) => {
-        setstate(e.target.value);
-    }
 
     useEffect(() => {
         setstate(3)
@@ -25,21 +20,39 @@ const Dynamic = () => {
         for (let j = 0; j < state; j++) {
             let devide = [];
             for (let k = 0; k < state; k++) {
-                devide.push("-")
+                devide.push("")
             }
             x.push(devide)
             setData(x)
         }
     }, [state])
 
-    const callMe = (X, I) => {
-        console.log(data)
-        do{
-            data[X][I] = player;
-            checkWinner(X, I, data)
-            setPlayer(player == "X" ? "O" : "X");
-            break;
-        }while(!gameOver)
+    let copystate = [];
+    const AddValues = (X, I) => {
+        // copystate = [...data]
+        // console.log(copystate)
+        // setData(copystate)
+        // if (copystate[X][I] === "") {
+        //     copystate[X][I] = player ? "X" : "O"
+        //     setPlayer(!player)
+        //     const winner = checkWinner(X, I);
+        //     if (winner !== null) {
+        //         alert(winner + " is the winner.");
+        //     }
+        // } else {
+        //     alert("already clicked");
+        // }
+
+        data[X][I] = "2"
+        copystate = [...data]
+        setStoreValues([...storeValues, copystate]);
+    }
+    console.log(storeValues)
+
+    // console.log(storeValues)
+
+    const multiple_small_button = (val, ind) => {
+        console.log(val, ind)
     }
 
     const checkWinner = (X, I) => {
@@ -49,7 +62,7 @@ const Dynamic = () => {
         let RightDiagonal = [];
         let LeftDiagonal = [];
         let optVariable = 1;
-        // ahiya optional variable atle levo pade chhe because left diagonal ma second value set karavvani chhe
+
         for (let m = 0; m < state; m++) {
             let dec = state - (optVariable)
             check.push(data[m][I]);
@@ -58,23 +71,13 @@ const Dynamic = () => {
             ++optVariable;
         }
 
-        if (data[X].every(ForX) == true) {
-            alert("Winner is X")
-        } else if (data[X].every(ForO) == true) {
-            alert("winner is O")
-        } else if (check.every(ForX) == true) {
-            alert("Winner is X")
-        } else if (check.every(ForO) == true) {
-            alert("Winner is O")
-        } else if (RightDiagonal.every(ForX) == true) {
-            alert("Winner is X")
-        } else if (RightDiagonal.every(ForO) == true) {
-            alert("Winner is O")
-        } else if (LeftDiagonal.every(ForX) == true) {
-            alert("Winner is X")
-        } else if (LeftDiagonal.every(ForO) == true) {
-            alert("Winner is O")
+        let winner = null;
+        if (data[X].every(ForX) || check.every(ForX) || RightDiagonal.every(ForX) || LeftDiagonal.every(ForX)) {
+            winner = 'X';
+        } else if (data[X].every(ForO) || check.every(ForO) || RightDiagonal.every(ForO) || LeftDiagonal.every(ForO)) {
+            winner = 'O';
         }
+        return winner;
     }
 
     const repeat = [];
@@ -88,19 +91,24 @@ const Dynamic = () => {
     return (
         <>
             <div className='centers' >
-                <input type="number" value={state} id="fruits" onChange={handleChange} />
+                <input type="number" value={state || ""} id="fruits" onChange={(e) => setstate(e.target.value)} />
                 <button className="button-29" onClick={refresh} role="button"> reset </button>
             </div>
-            <div style={{ display: "grid", gridTemplateColumns: `${t}`, marginTop: "10px", width: "300px", height: "300px" }}>
+            <div style={{ display: "grid", gridTemplateColumns: `${t}`, marginTop: "50px", width: "400px", height: "400px", marginLeft: "auto", marginRight: "auto" }}>
                 {
                     data?.map((val, X) => {
-                        console.log(data)
                         return val?.map((ins, I) => {
-                            return <button key={I} onClick={() => callMe(X, I)}>{ins}</button>
+                            return <button key={I} onClick={() => AddValues(X, I)}>{ins}</button>
                         })
                     })
                 }
             </div>
+            {
+                storeValues?.map((val, ind) => {
+                    return <button key={ind} onClick={() => multiple_small_button(val, ind)}>{ind}</button>
+                })
+            }
+
         </>
     )
 }
