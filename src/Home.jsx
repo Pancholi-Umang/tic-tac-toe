@@ -30,13 +30,14 @@ const Home = () => {
       if (check === true) {
         setStoreValues([...StoreValues?.slice(0, finalState), copyState])
       }
-    } else {
+    } 
+    else {
       alert("already selected");
       setStartToggle(false)
     }
     setcheck(false)
   };
-  console.log(stateee)
+
 
   const MultipleButtons = (val, i) => {
     setcheck(true)
@@ -62,6 +63,7 @@ const Home = () => {
         return true
       }
     }
+
   };
 
   const isWinner = checkWinner();
